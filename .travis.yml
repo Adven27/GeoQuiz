@@ -51,5 +51,3 @@ after_failure:
   # print lint results details
   - for f in app/build/outputs/lint-results.html; do pandoc $f -t plain; done
   - pandoc app/build/reports/tests/debug/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
-  - pandoc app/build/reports/tests/debug/index.html -t markdown | sed -n '/^Failed tests/,/default-package/p'
-  - pandoc app/build/reports/tests/debug/index.html -t html | sed -n '/^Failed tests/,/default-package/p'

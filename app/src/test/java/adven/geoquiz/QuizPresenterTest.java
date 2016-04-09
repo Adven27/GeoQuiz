@@ -46,7 +46,7 @@ public class QuizPresenterTest {
     @Test
     public void shouldReturnRightAnswerToView() throws Exception {
         sut.checkAnswer(YES_QUESTION, true);
-        verify(view).showCheckResult(false);
+        verify(view).showCheckResult(true);
     }
 
     @Test
