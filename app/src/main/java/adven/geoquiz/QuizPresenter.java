@@ -21,6 +21,6 @@ public class QuizPresenter implements QuizContract.UserActionsListener {
 
     @Override
     public void checkAnswer(@NonNull Question question, boolean isYes) {
-        view.showCheckResult(question.isCorrect() == isYes);
+        view.showCheckResult(question.isCorrect() == !isYes);
     }
 }
