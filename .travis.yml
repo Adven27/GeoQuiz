@@ -13,9 +13,9 @@ cache:
 addons:
   apt_packages:
     - pandoc
-  artifacts:
-    paths:
-      - $(git ls-files -o | grep build/outputs | tr "\n" ":")
+  #artifacts:
+  #  paths:
+  #    - $(git ls-files -o | grep build/outputs | tr "\n" ":")
 
 android:
   components:
@@ -55,9 +55,8 @@ script:
 #  - rm /home/travis/.gradle/caches/2.8/plugin-resolution/cache.properties.lock
 
 after_failure:
-  - pandoc builder/build/reports/tests/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
+  - pandoc app/build/reports/tests/debug/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
 
 after_script:
   # print lint results details
   - for f in app/build/outputs/lint-results.html; do pandoc $f -t plain; done
-  - for f in data/build/outputs/lint-results.html; do pandoc $f -t plain; done
