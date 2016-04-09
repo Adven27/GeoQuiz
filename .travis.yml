@@ -19,15 +19,9 @@ addons:
 
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
     - platform-tools
     - tools
-
-    # The BuildTools version used by your project
     - build-tools-23.0.2
-
-    # The SDK version used to compile your project
     - android-23
 
     # Additional components
@@ -36,8 +30,7 @@ android:
     - extra-android-m2repository
     - addon-google_apis-google-23
 
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
+    # Specify at least one system image, if you need to run emulator(s) during your tests
     #- sys-img-armeabi-v7a-android-23
     #- sys-img-x86-android-17
 
@@ -55,8 +48,8 @@ script:
 #  - rm /home/travis/.gradle/caches/2.8/plugin-resolution/cache.properties.lock
 
 after_failure:
-  - pandoc app/build/reports/tests/debug/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
-
-after_script:
   # print lint results details
   - for f in app/build/outputs/lint-results.html; do pandoc $f -t plain; done
+  - pandoc app/build/reports/tests/debug/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
+  - pandoc app/build/reports/tests/debug/index.html -t markdown | sed -n '/^Failed tests/,/default-package/p'
+  - pandoc app/build/reports/tests/debug/index.html -t html | sed -n '/^Failed tests/,/default-package/p'
