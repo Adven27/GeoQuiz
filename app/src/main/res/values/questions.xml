@@ -1,0 +1,4 @@
+<resources>
+    <string name="q_true">true</string>
+    <string name="q_false">false</string>
+</resources>
