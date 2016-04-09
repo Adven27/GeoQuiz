@@ -24,11 +24,6 @@ public class Question {
         return txt == question.txt && isCorrect == question.isCorrect;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(txt, isCorrect);
-    }
-
     public int getTxt() {
         return txt;
     }
