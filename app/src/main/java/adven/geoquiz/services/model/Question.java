@@ -1,12 +1,10 @@
 package adven.geoquiz.services.model;
 
-import java.util.Objects;
-
 public class Question {
-    private final int txt;
+    private final String txt;
     private final boolean isCorrect;
 
-    public Question(int txt, boolean isCorrect) {
+    public Question(String txt, boolean isCorrect) {
         this.txt = txt;
         this.isCorrect = isCorrect;
     }
@@ -24,7 +22,7 @@ public class Question {
         return txt == question.txt && isCorrect == question.isCorrect;
     }
 
-    public int getTxt() {
+    public String getTxt() {
         return txt;
     }
 

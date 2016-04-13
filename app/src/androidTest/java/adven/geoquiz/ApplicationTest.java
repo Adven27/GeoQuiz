@@ -1,15 +1,72 @@
 package adven.geoquiz;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+import android.support.test.espresso.Root;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.test.suitebuilder.annotation.LargeTest;
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
+import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import adven.geoquiz.custom.ToastMatcher;
+import adven.geoquiz.services.Injection;
+import adven.geoquiz.services.QuestionsService;
+import adven.geoquiz.services.model.Question;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
+@RunWith(AndroidJUnit4.class)
+@LargeTest
+public class ApplicationTest {
+    public static final Question QUESTION = new Question("My QUESTIONNNN!!!", true);
+    /**
+     * {@link ActivityTestRule} is a JUnit {@link Rule @Rule} to launch your activity under test.
+     *
+     * <p>
+     * Rules are interceptors which are executed for each test method and are important building
+     * blocks of Junit tests.
+     */
+    @Rule
+    public ActivityTestRule<QuizActivity> mActivityTestRule = new ActivityTestRule(QuizActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            super.beforeActivityLaunched();
+            Injection.bind(QuestionsService.class, new QuestionsService() {
+                @Override
+                public Question getQuestion(int index) {
+                    return QUESTION;
+                }
+            });
+        }
+    };
+
+    @Test
+    public void questionShouldBeVisible() throws Exception {
+        onView(withId(R.id.question_txt)).check(matches(withText(QUESTION.getTxt())));
     }
 
+    @Test
+    public void shouldCanAnswerRight() throws Exception {
+        onView(withId(R.id.true_btn)).perform(click());
+        onView(withText(R.string.toast_correct)).inRoot(isToast()).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void shouldCanAnswerWrong() throws Exception {
+        onView(withId(R.id.false_btn)).perform(click());
+        onView(withText(R.string.toast_incorrect)).inRoot(isToast()).check(matches(isDisplayed()));
+    }
+
+    public static Matcher<Root> isToast() {
+        return new ToastMatcher();
+    }
 
 }

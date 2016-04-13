@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import adven.geoquiz.services.Injection;
 import adven.geoquiz.services.QuestionsService;
 import adven.geoquiz.services.model.Question;
 
@@ -25,7 +26,6 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mPrevBtn;
     private TextView mQuestionTextView;
 
-    private final QuestionsService mQuestionsService = new QuestionsService();
     private int mCurrentQuestionIndex = 1;
 
     @Override
@@ -108,7 +108,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void updateQuestion(int i) {
-        Question newQuestion = mQuestionsService.getQuestion(i);
+        Question newQuestion = Injection.provide(QuestionsService.class).getQuestion(i);
         if (newQuestion != null) {
             mCurrentQuestionIndex = i;
             mQuestionTextView.setText(newQuestion.getTxt());
@@ -116,7 +116,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(boolean isCorrect) {
-        if (isCorrect == mQuestionsService.getQuestion(mCurrentQuestionIndex).isCorrect()) {
+        if (isCorrect == Injection.provide(QuestionsService.class).getQuestion(mCurrentQuestionIndex).isCorrect()) {
             showCorrectToast();
         } else {
             showIncorrectToast();
