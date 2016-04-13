@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 public class QuizPresenterTest {
 
-    private static final Question YES_QUESTION = new Question(1, true);
+    private static final Question YES_QUESTION = new Question("1", true);
 
     private QuizPresenter sut;
 
@@ -35,7 +35,7 @@ public class QuizPresenterTest {
     @Test
     public void shouldReturnQuestionFromRepoToView() throws Exception {
         final int index = 1;
-        final Question expectedQuestion = new Question(1, true);
+        final Question expectedQuestion = YES_QUESTION;
         when(questionsService.getQuestion(index)).thenReturn(expectedQuestion);
 
         sut.getQuestion(index);
