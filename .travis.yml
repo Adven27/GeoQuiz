@@ -1,11 +1,11 @@
 language: android
 
-env:
- matrix:
-    - ANDROID_TARGET=android-18 ANDROID_ABI=armeabi-v7a
-  global:
-   # install timeout in minutes (2 minutes by default)
-    - ADB_INSTALL_TIMEOUT=8
+#env:
+# matrix:
+#    - ANDROID_TARGET=android-18 ANDROID_ABI=armeabi-v7a
+#  global:
+#   # install timeout in minutes (2 minutes by default)
+#    - ADB_INSTALL_TIMEOUT=8
 
 addons:
   apt_packages:
