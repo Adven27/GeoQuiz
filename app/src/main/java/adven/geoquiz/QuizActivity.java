@@ -153,6 +153,7 @@ public class QuizActivity extends AppCompatActivity implements QuizContract.View
     @Override
     public void showCheatScreen(boolean answer) {
         Intent i = new Intent(QuizActivity.this, CheatActivity.class);
+        i.putExtra(CheatActivity.EXTRA_ANSWER, answer);
         startActivity(i);
     }
 
