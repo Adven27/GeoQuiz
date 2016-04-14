@@ -51,6 +51,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void setUpQuestionTextView() {
+
         mQuestionTextView = (TextView) findViewById(R.id.question_txt);
         updateQuestion(mCurrentQuestionIndex);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
