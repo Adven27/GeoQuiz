@@ -1,13 +1,14 @@
 package adven.geoquiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -17,16 +18,22 @@ import adven.geoquiz.services.Injection;
 import adven.geoquiz.services.QuestionsService;
 import adven.geoquiz.services.model.Question;
 
-public class QuizActivity extends AppCompatActivity {
+import static adven.geoquiz.R.string.toast_correct;
+import static adven.geoquiz.R.string.toast_incorrect;
+import static android.widget.Toast.LENGTH_SHORT;
+
+public class QuizActivity extends AppCompatActivity implements QuizContract.View {
 
     private static final String KEY_INDEX = "index";
+    private Button mCheatBtn;
     private Button mTrueBtn;
     private Button mFalseBtn;
     private ImageButton mNextBtn;
     private ImageButton mPrevBtn;
-    private TextView mQuestionTextView;
 
+    private TextView mQuestionTextView;
     private int mCurrentQuestionIndex = 1;
+    private QuizPresenter mActionListener;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -37,6 +44,7 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActionListener = new QuizPresenter(Injection.provide(QuestionsService.class), this);
 
         if (savedInstanceState != null) {
             mCurrentQuestionIndex = savedInstanceState.getInt(KEY_INDEX);
@@ -48,22 +56,23 @@ public class QuizActivity extends AppCompatActivity {
         setUpQuizButtons();
         setUpToolbar();
         setUpFloatingActionButton();
+
     }
 
     private void setUpQuestionTextView() {
-
         mQuestionTextView = (TextView) findViewById(R.id.question_txt);
-        updateQuestion(mCurrentQuestionIndex);
+        mActionListener.getQuestion(mCurrentQuestionIndex);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                nextQuestion();
+                mActionListener.getQuestion(mCurrentQuestionIndex + 1);
             }
         });
     }
 
     private void setUpQuizButtons() {
+        mCheatBtn = (Button) findViewById(R.id.cheat_btn);
         mTrueBtn = (Button) findViewById(R.id.true_btn);
         mFalseBtn = (Button) findViewById(R.id.false_btn);
         mNextBtn = (ImageButton) findViewById(R.id.next_btn);
@@ -73,14 +82,14 @@ public class QuizActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                checkAnswer(true);
+                mActionListener.checkAnswer(mCurrentQuestionIndex, true);
             }
         });
         mFalseBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                checkAnswer(false);
+                mActionListener.checkAnswer(mCurrentQuestionIndex, false);
             }
         });
 
@@ -88,48 +97,24 @@ public class QuizActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                nextQuestion();
+                mActionListener.getQuestion(mCurrentQuestionIndex + 1);
             }
         });
         mPrevBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                prevQuestion();
+                mActionListener.getQuestion(mCurrentQuestionIndex - 1);
             }
         });
-    }
 
-    private void prevQuestion() {
-        updateQuestion(mCurrentQuestionIndex - 1);
-    }
+        mCheatBtn.setOnClickListener(new View.OnClickListener() {
 
-    private void nextQuestion() {
-        updateQuestion(mCurrentQuestionIndex + 1);
-    }
-
-    private void updateQuestion(int i) {
-        Question newQuestion = Injection.provide(QuestionsService.class).getQuestion(i);
-        if (newQuestion != null) {
-            mCurrentQuestionIndex = i;
-            mQuestionTextView.setText(newQuestion.getTxt());
-        }
-    }
-
-    private void checkAnswer(boolean isCorrect) {
-        if (isCorrect == Injection.provide(QuestionsService.class).getQuestion(mCurrentQuestionIndex).isCorrect()) {
-            showCorrectToast();
-        } else {
-            showIncorrectToast();
-        }
-    }
-
-    private void showIncorrectToast() {
-        Toast.makeText(this, R.string.toast_incorrect, Toast.LENGTH_SHORT).show();
-    }
-
-    private void showCorrectToast() {
-        Toast.makeText(this, R.string.toast_correct, Toast.LENGTH_SHORT).show();
+            @Override
+            public void onClick(View v) {
+               mActionListener.showCheatScreen(mCurrentQuestionIndex);
+            }
+        });
     }
 
     private void setUpToolbar() {
@@ -153,6 +138,22 @@ public class QuizActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_quiz, menu);
         return true;
+    }
+
+    @Override
+    public void showCheckResult(boolean isCorrect) {
+        Toast.makeText(this, isCorrect? toast_correct : toast_incorrect, LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showQuestion(Question q) {
+       mQuestionTextView.setText( q != null ? q.getTxt() : "No question" );
+    }
+
+    @Override
+    public void showCheatScreen(boolean answer) {
+        Intent i = new Intent(QuizActivity.this, CheatActivity.class);
+        startActivity(i);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package adven.geoquiz;
 
-import android.support.annotation.NonNull;
-
 import adven.geoquiz.services.QuestionsService;
 import adven.geoquiz.services.model.Question;
 
@@ -20,7 +18,13 @@ public class QuizPresenter implements QuizContract.UserActionsListener {
     }
 
     @Override
-    public void checkAnswer(@NonNull Question question, boolean isYes) {
-        view.showCheckResult(question.isCorrect() == isYes);
+    public void checkAnswer(int index, boolean isYes) {
+        Question q = questionsService.getQuestion(index);
+        view.showCheckResult(q.isCorrect() == isYes);
+    }
+
+    @Override
+    public void showCheatScreen(int index) {
+        view.showCheatScreen(questionsService.getQuestion(index).isCorrect());
     }
 }
