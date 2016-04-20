@@ -14,7 +14,12 @@ public class QuizPresenter implements QuizContract.UserActionsListener {
 
     @Override
     public void getQuestion(int index) {
-        view.showQuestion(questionsService.getQuestion(index));
+        Question q = questionsService.getQuestion(index);
+        if (q != null) {
+            view.showQuestion(q);
+            return;
+        }
+        throw new QuestionNotFoundException("Question with index " + index + " not found.");
     }
 
     @Override

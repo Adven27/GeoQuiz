@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * non-zero it is not idle. This is very similar to the way a {@link java.util.concurrent.Semaphore}
  * behaves.
  * <p>
- * This class can then be used to wrap up operations that while in progress should block tests from
+ * This class can then be used to wrap idle operations that while in progress should block tests from
  * accessing the UI.
  */
 public final class SimpleCountingIdlingResource implements IdlingResource {

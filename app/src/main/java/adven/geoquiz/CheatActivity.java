@@ -1,51 +1,53 @@
 package adven.geoquiz;
 
-import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
-import android.support.test.espresso.IdlingResource;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import adven.geoquiz.util.EspressoIdlingResource;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.InstanceState;
+import org.androidannotations.annotations.ViewById;
 
 import static adven.geoquiz.R.string.false_btn;
 import static adven.geoquiz.R.string.true_btn;
 
+@EActivity(R.layout.activity_cheat)
 public class CheatActivity extends AppCompatActivity implements CheatContract.View{
-
     public static final String EXTRA_ANSWER = "adven.geoquiz.is_true_answer";
-    private TextView mAnswerTextView;
+    public static final String EXTRA_ANSWER_SHOWN = "adven.geoquiz.answer_shown";
+
+    @ViewById(R.id.answerTextView) TextView mAnswerTextView;
+    @InstanceState boolean mIsAnswerShown;
+    @Extra(EXTRA_ANSWER) boolean answer;
+
     private CheatPresenter mActionListener;
-    private Button mShowAnswerBtn;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @AfterViews
+    void setUp() {
         mActionListener = new CheatPresenter(this);
+        if (mIsAnswerShown) {
+            setAnswerShownResult();
+        }
+    }
 
-        setContentView(R.layout.activity_cheat);
-        mAnswerTextView = (TextView) findViewById(R.id.answerTextView);
-
-        mShowAnswerBtn = (Button) findViewById(R.id.showAnswerBtn);
-        mShowAnswerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActionListener.showAnswer(getIntent().getBooleanExtra(EXTRA_ANSWER, false));
-            }
-        });
-
-
+    @Click
+    void showAnswerBtn() {
+        mActionListener.showAnswer(answer);
     }
 
     @Override
     public void showAnswer(boolean answer) {
         mAnswerTextView.setText(answer? true_btn : false_btn);
+        setAnswerShownResult();
     }
 
-    @VisibleForTesting
-    public IdlingResource getCountingIdlingResource() {
-        return EspressoIdlingResource.getIdlingResource();
+    private void setAnswerShownResult() {
+        mIsAnswerShown = true;
+        Intent data = new Intent();
+        data.putExtra(EXTRA_ANSWER_SHOWN, mIsAnswerShown);
+        setResult(RESULT_OK, data);
     }
 }

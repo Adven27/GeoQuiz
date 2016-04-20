@@ -18,12 +18,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/true_btn"
+            android:id="@+id/trueBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/true_btn"/>
         <Button
-            android:id="@+id/false_btn"
+            android:id="@+id/falseBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/false_btn"/>
@@ -31,7 +31,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/cheat_btn"
+        android:id="@+id/cheatBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cheat_btn"/>
@@ -42,13 +42,13 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/prev_btn"
+            android:id="@+id/prevBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/arrow_left"/>
 
         <ImageButton
-            android:id="@+id/next_btn"
+            android:id="@+id/nextBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/arrow_right"/>

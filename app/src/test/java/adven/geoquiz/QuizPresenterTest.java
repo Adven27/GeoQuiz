@@ -50,4 +50,9 @@ public class QuizPresenterTest {
         sut.showCheatScreen(YES_Q_INDEX);
         verify(view).showCheatScreen(YES_QUESTION.isCorrect());
     }
+
+    @Test(expected = QuizContract.UserActionsListener.QuestionNotFoundException.class)
+    public void shouldThrowExceptionIfQuestionNotFound() throws Exception {
+        sut.getQuestion(100);
+    }
 }
